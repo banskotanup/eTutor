@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//enums
+
+enum Role{
+  admin
+  teacher
+  student
+  accountant
+}
+
+enum PaymentStatus{
+  pending
+  paid
+  failed
+}
+
+enum Gateway{
+  khalti
+  esewa
+  stripe
+  paypal
+}
+
+enum AssignmentStatus{
+  submitted
+  graded
+  pending
+}
+
+enum AttendanceStatus{
+  present
+  absent
+}
+
+//models
+
+//1. User
+model User{
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  email String @unique
+  phone String? @unique
+  password String
+  role Role @default(student)
+  status String? @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relations
+  subjectCreated Subject[] @relation("SubjectTeacher")
+  lessonCreated Lesson[]
+  assignmentGiven Assignment[]
+  submissions Submission[]
+  payments Payment[]
+  salaries Salary[]
+
+  liveClasses LiveClass[] @relation("ClassTeacher")
+  attendance Attendance[]
+
+  messageSent Message[] @relation("Sender")
+  messageReceived Message[] @relation("Receiver")
+
+  notification Notification[]
+}
+
+//2. Subject // course
+model Subject {
+  id Int @id @default(autoincrement())
+  title String 
+  description String?
+  price Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //who is the teacher of the subject 
+  teacherId Int
+  teacher User @relation("SubjectTeacher", fields: [teacherId], references: [id])
+
+  // Relations
+  lessons     Lesson[]
+  assignments Assignment[]
+  payments    Payment[]
+  liveClasses LiveClass[]
+}
+
+// 3. lessons
+model Lesson{
+  id Int @id @default(autoincrement())
+  title String
+  videoUrl String?
+  pdfUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjectId Int
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  teacherId Int
+  teacher User @relation(fields: [teacherId], references:[id])
+}
+
+//4. Assignment
+model Assignment{
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  fileUrl String?
+  dueDate DateTime
+  createdAt DateTime @default(now())
+
+  subjectId Int
+  subject Subject @relation(fields:[subjectId], references:[id])
+
+  teacherId Int
+  teacher User @relation(fields:[teacherId], references:[id])
+
+  submissions Submission[]
+}
+
+//5. submissions
+model Submission{
+  id Int @id @default(autoincrement())
+  fileUrl String?
+  SubmittedAt DateTime @default(now())
+  marks Int?
+  status AssignmentStatus @default(pending)
+
+  assignmentId Int
+  assignment Assignment @relation(fields:[assignmentId], references:[id])
+
+  studentId Int
+  student User @relation(fields:[studentId], references:[id])
+}
+
+//6. payments
+model Payment{
+  id Int @id @default(autoincrement())
+  amount Int
+  status PaymentStatus @default(pending)
+  gateway Gateway
+  transactionId String?
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+
+  studentId Int 
+  student User @relation(fields:[studentId], references:[id])
+
+  subjectId Int
+  subject Subject @relation(fields:[subjectId], references:[id])
+}
+
+//7. liveClasses
+model LiveClass{
+  id Int @id @default(autoincrement())
+  startTime DateTime
+  endTime DateTime?
+  meetingUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjectId Int
+  subject Subject @relation(fields:[subjectId], references:[id])
+
+  teacherId Int
+  teacher User @relation("ClassTeacher", fields:[teacherId], references:[id])
+
+  attendance Attendance[]
+}
+
+//8. attendance
+model Attendance{
+  id Int @id @default(autoincrement())
+  status AttendanceStatus @default(present)
+  timestamp DateTime @default(now())
+
+  classId Int
+  liveClass LiveClass @relation(fields:[classId], references:[id])
+
+  studentId Int
+  student User @relation(fields:[studentId], references:[id])
+}
+
+//9. salary module for teachers
+model Salary{
+  id Int @id @default(autoincrement())
+  amount Int
+  month String
+  status String @default("pending")
+  createdAt DateTime @default(now())
+
+  teacherId Int
+  teacher User @relation(fields:[teacherId], references:[id])
+}
+
+//10. Notification
+model Notification{
+  id Int @id @default(autoincrement())
+  message String
+  createdAt DateTime @default(now())
+  isRead Boolean @default(false)
+
+  userId Int 
+  user User @relation(fields:[userId], references:[id])
+}
+
+//11. messaging system 
+model Message{
+  id Int @id @default(autoincrement())
+  content String
+  createdAt DateTime @default(now())
+
+  senderId Int
+  sender User @relation("Sender", fields:[senderId], references: [id])
+
+  receiverId Int
+  receiver User @relation("Receiver", fields:[receiverId], references: [id])
+}
