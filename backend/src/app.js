@@ -8,6 +8,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const authRouter = require("./routes/auth.routes");
+const userRouter = require("./routes/user.routes");
+const subjectRouter = require("./routes/subject.routes");
+
+//route testing
 const testRouter = require("./routes/test.routes");
 
 
@@ -16,6 +20,11 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/subjects", subjectRouter);
+
+
+//route testing
 app.use("/test", testRouter);
 
 const port = process.env.PORT;
