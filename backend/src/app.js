@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const authRouter = require("./routes/auth.routes");
+const testRouter = require("./routes/test.routes");
 
 
 app.get("/", (req, res) => {
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/test", testRouter);
 
 const port = process.env.PORT;
 app.listen(port, () => {
