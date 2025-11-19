@@ -27,6 +27,30 @@ exports.getUsers = async (req, res) => {
     }
 };
 
+//get teacher only
+exports.getTeachers = async (req, res) => {
+    try {
+        const teachers = await prisma.user.findMany({
+            where: {
+                role: "teacher",
+                status: "approved",
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                phone: true
+            }
+        });
+        return res.json(teachers);
+    }  
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
 //approve user
 exports.approveUser = async (req, res) => {
     try {
