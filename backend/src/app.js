@@ -11,6 +11,7 @@ const authRouter = require("./routes/auth.routes");
 const userRouter = require("./routes/user.routes");
 const subjectRouter = require("./routes/subject.routes");
 const lessonRouter = require("./routes/lesson.routes");
+const assignmentRouter = require("./routes/assignment.routes");
 
 //route testing
 const testRouter = require("./routes/test.routes");
@@ -24,6 +25,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subjects", subjectRouter);
 app.use("/api/v1/lessons", lessonRouter);
+app.use("/api/v1/assignments", assignmentRouter);
 
 //route testing
 app.use("/test", testRouter);

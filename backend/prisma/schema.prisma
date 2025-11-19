@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -84,7 +83,7 @@ model Subject {
   id Int @id @default(autoincrement())
   title String 
   description String?
-  price Int
+  price Int @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -103,6 +102,7 @@ model Subject {
 model Lesson{
   id Int @id @default(autoincrement())
   title String
+  description String?
   videoUrl String?
   pdfUrl String?
   createdAt DateTime @default(now())
@@ -137,7 +137,7 @@ model Assignment{
 model Submission{
   id Int @id @default(autoincrement())
   fileUrl String?
-  SubmittedAt DateTime @default(now())
+  submittedAt DateTime @default(now())
   marks Int?
   status AssignmentStatus @default(pending)
 
