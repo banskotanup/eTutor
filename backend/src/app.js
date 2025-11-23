@@ -15,6 +15,7 @@ const assignmentRouter = require("./routes/assignment.routes");
 const submissionRouter = require("./routes/submission.routes");
 const liveClassRouter = require("./routes/liveclass.routes");
 const attendanceRouter = require("./routes/attendance.routes");
+const paymentRouter = require("./routes/payment.routes");
 
 //route testing
 const testRouter = require("./routes/test.routes");
@@ -32,6 +33,7 @@ app.use("/api/v1/assignments", assignmentRouter);
 app.use("/api/v1/submission", submissionRouter);
 app.use("/api/v1/live-class", liveClassRouter);
 app.use("/api/v1/attendance", attendanceRouter);
+app.use("/api/v1/payments", paymentRouter);
 
 //route testing
 app.use("/test", testRouter);

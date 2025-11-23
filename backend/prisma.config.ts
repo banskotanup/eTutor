@@ -3,11 +3,15 @@ import "dotenv/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
+  engine: "classic",
+
+  datasource: {
+    provider: "postgresql",
+    url: env("DATABASE_URL"), // ✅ REQUIRED for migrate dev
+  },
+
   migrations: {
     path: "prisma/migrations",
-  },
-  engine: "classic",
-  datasource: {
-    url: env("DATABASE_URL"),
+    // url: env("DATABASE_URL"), // optional, can remove
   },
 });
