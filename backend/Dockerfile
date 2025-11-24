@@ -21,5 +21,8 @@ ENV PORT=8080
 # Expose the port so our computer can access it
 EXPOSE 8080
 
-# Run the app
-CMD ["npm", "run", "dev"]
+# # Run the app
+# CMD ["npm", "run", "dev"]
+
+# Generate Prisma client at runtime (with real env vars)
+CMD ["sh", "-c", "npx prisma generate && npm run dev"]

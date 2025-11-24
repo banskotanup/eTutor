@@ -17,6 +17,8 @@ const liveClassRouter = require("./routes/liveclass.routes");
 const attendanceRouter = require("./routes/attendance.routes");
 const paymentRouter = require("./routes/payment.routes");
 const salaryRouter = require("./routes/salary.routes");
+const notificationRouter = require("./routes/notification.routes");
+const messageRouter = require("./routes/message.routes");
 
 //route testing
 const testRouter = require("./routes/test.routes");
@@ -36,6 +38,8 @@ app.use("/api/v1/live-class", liveClassRouter);
 app.use("/api/v1/attendance", attendanceRouter);
 app.use("/api/v1/payments", paymentRouter);
 app.use("/api/v1/salary", salaryRouter);
+app.use("/api/v1/notification", notificationRouter);
+app.use("/api/v1/message", messageRouter);
 
 //route testing
 app.use("/test", testRouter);
