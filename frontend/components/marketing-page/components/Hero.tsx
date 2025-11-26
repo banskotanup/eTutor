@@ -10,6 +10,36 @@ const fadeSlideUp = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
+// const StyledBox = styled("div")(({ theme }) => ({
+//   alignSelf: "center",
+//   width: "100%",
+//   height: 400,
+//   marginTop: theme.spacing(8),
+//   borderRadius: (theme.vars || theme).shape.borderRadius,
+//   outline: "6px solid",
+//   outlineColor: "hsla(220, 25%, 80%, 0.2)",
+//   border: "1px solid",
+//   borderColor: (theme.vars || theme).palette.grey[200],
+//   boxShadow: "0 0 12px 8px hsla(220, 25%, 80%, 0.2)",
+//   backgroundImage: `url(${
+//     process.env.TEMPLATE_IMAGE_URL || "https://mui.com"
+//   }/static/screenshots/material-ui/getting-started/templates/dashboard.jpg)`,
+//   backgroundSize: "cover",
+//   animation: `${fadeSlideUp} 1.4s ease-out`,
+//   [theme.breakpoints.up("sm")]: {
+//     marginTop: theme.spacing(10),
+//     height: 700,
+//   },
+//   ...theme.applyStyles("dark", {
+//     boxShadow: "0 0 24px 12px hsla(210, 100%, 25%, 0.2)",
+//     backgroundImage: `url(${
+//       process.env.TEMPLATE_IMAGE_URL || "https://mui.com"
+//     }/static/screenshots/material-ui/getting-started/templates/dashboard-dark.jpg)`,
+//     outlineColor: "hsla(220, 20%, 42%, 0.1)",
+//     borderColor: (theme.vars || theme).palette.grey[700],
+//   }),
+// }));
+
 const StyledBox = styled("div")(({ theme }) => ({
   alignSelf: "center",
   width: "100%",
@@ -21,20 +51,23 @@ const StyledBox = styled("div")(({ theme }) => ({
   border: "1px solid",
   borderColor: (theme.vars || theme).palette.grey[200],
   boxShadow: "0 0 12px 8px hsla(220, 25%, 80%, 0.2)",
-  backgroundImage: `url(${
-    process.env.TEMPLATE_IMAGE_URL || "https://mui.com"
-  }/static/screenshots/material-ui/getting-started/templates/dashboard.jpg)`,
+
+  // 👉 Your custom LMS image
+  backgroundImage: `url("/images/lms.jpg")`,
   backgroundSize: "cover",
+  backgroundPosition: "center",
   animation: `${fadeSlideUp} 1.4s ease-out`,
+
   [theme.breakpoints.up("sm")]: {
     marginTop: theme.spacing(10),
     height: 700,
   },
+
+  // Dark mode (same image but darker)
   ...theme.applyStyles("dark", {
     boxShadow: "0 0 24px 12px hsla(210, 100%, 25%, 0.2)",
-    backgroundImage: `url(${
-      process.env.TEMPLATE_IMAGE_URL || "https://mui.com"
-    }/static/screenshots/material-ui/getting-started/templates/dashboard-dark.jpg)`,
+    backgroundImage: `url("/images/lms.jpg")`,
+    filter: "brightness(0.8)",
     outlineColor: "hsla(220, 20%, 42%, 0.1)",
     borderColor: (theme.vars || theme).palette.grey[700],
   }),

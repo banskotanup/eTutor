@@ -90,7 +90,7 @@ export default function LMSContent() {
           },
         }}
       >
-        Back to Home Page
+        Back to Home 
       </Button>
     </Stack>
   );

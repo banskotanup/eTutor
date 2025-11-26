@@ -10,46 +10,46 @@ import { useColorScheme } from '@mui/material/styles';
 
 const userTestimonials = [
   {
-    avatar: <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />,
-    name: 'Remy Sharp',
-    occupation: 'Senior Engineer',
+    avatar: <Avatar alt="Anjali Sharma" src="/images/avatar1.jpg" />,
+    name: 'Anjali Sharma',
+    occupation: 'High School Student',
     testimonial:
-      "I absolutely love how versatile this product is! Whether I'm tackling work projects or indulging in my favorite hobbies, it seamlessly adapts to my changing needs. Its intuitive design has truly enhanced my daily routine, making tasks more efficient and enjoyable.",
+      "Virtual Education Hub has completely transformed my learning experience. The live online classes are interactive and easy to follow, and I can track my progress effortlessly. Highly recommend it!",
   },
   {
-    avatar: <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />,
-    name: 'Travis Howard',
-    occupation: 'Lead Product Designer',
+    avatar: <Avatar alt="Rohit Verma" src="/images/avatar2.jpg" />,
+    name: 'Rohit Verma',
+    occupation: 'College Student',
     testimonial:
-      "One of the standout features of this product is the exceptional customer support. In my experience, the team behind this product has been quick to respond and incredibly helpful. It's reassuring to know that they stand firmly behind their product.",
+      "The LMS is intuitive and well-organized. I love how I can access recorded lessons, submit assignments online, and stay on top of all my subjects without stress.",
   },
   {
-    avatar: <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />,
-    name: 'Cindy Baker',
-    occupation: 'CTO',
+    avatar: <Avatar alt="Priya Singh" src="/images/avatar3.jpg" />,
+    name: 'Priya Singh',
+    occupation: 'Parent',
     testimonial:
-      'The level of simplicity and user-friendliness in this product has significantly simplified my life. I appreciate the creators for delivering a solution that not only meets but exceeds user expectations.',
+      "As a parent, I can monitor my child's progress and see their performance reports easily. The platform is secure, reliable, and truly supportive of online learning.",
   },
   {
-    avatar: <Avatar alt="Remy Sharp" src="/static/images/avatar/4.jpg" />,
-    name: 'Julia Stewart',
-    occupation: 'Senior Engineer',
+    avatar: <Avatar alt="Siddharth Joshi" src="/images/avatar4.jpg" />,
+    name: 'Siddharth Joshi',
+    occupation: 'Tutor',
     testimonial:
-      "I appreciate the attention to detail in the design of this product. The small touches make a big difference, and it's evident that the creators focused on delivering a premium experience.",
+      "Teaching through Virtual Education Hub has been smooth and engaging. The interactive tools make lessons more effective and students enjoy learning online.",
   },
   {
-    avatar: <Avatar alt="Travis Howard" src="/static/images/avatar/5.jpg" />,
-    name: 'John Smith',
-    occupation: 'Product Designer',
+    avatar: <Avatar alt="Neha Kapoor" src="/images/avatar5.jpg" />,
+    name: 'Neha Kapoor',
+    occupation: 'Student',
     testimonial:
-      "I've tried other similar products, but this one stands out for its innovative features. It's clear that the makers put a lot of thought into creating a solution that truly addresses user needs.",
+      "I appreciate the live quizzes and assignments. The instant feedback helps me understand my mistakes and improve faster. Online tuition has never been easier!",
   },
   {
-    avatar: <Avatar alt="Cindy Baker" src="/static/images/avatar/6.jpg" />,
-    name: 'Daniel Wolf',
-    occupation: 'CDO',
+    avatar: <Avatar alt="Vikram Rao" src="/images/avatar6.jpg" />,
+    name: 'Vikram Rao',
+    occupation: 'Tutor',
     testimonial:
-      "The quality of this product exceeded my expectations. It's durable, well-designed, and built to last. Definitely worth the investment!",
+      "Virtual Education Hub makes it easy to manage multiple classes, track student progress, and provide personalized attention online. It's a great tool for modern education.",
   },
 ];
 
@@ -120,9 +120,10 @@ export default function Testimonials() {
           Testimonials
         </Typography>
         <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-          See what our customers love about our products. Discover how we excel in
-          efficiency, durability, and satisfaction. Join us for quality, innovation,
-          and reliable support.
+          See what our students and tutors love about us.
+          Experience interactive online classes, personalized learning, and a
+          platform designed to make education accessible, engaging, and effective
+          for everyone.
         </Typography>
       </Box>
       <Grid container spacing={2}>

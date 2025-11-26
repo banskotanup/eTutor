@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -12,7 +13,9 @@ import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ColorModeIconDropdown from "../../shared-theme/ColorModeIconDropdown";
+import Link from 'next/link';
 import { LMSIcon } from "../../sign-in-side/components/CustomIcons"; // your logo
+
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -52,12 +55,12 @@ export default function AppAppBar() {
             <LMSIcon />
 
             <Box sx={{ display: { xs: "none", md: "flex" }, ml: 3, gap: 1 }}>
-              <Button color="info" variant="text" size="small">Home</Button>
-              <Button color="info" variant="text" size="small">About Us</Button>
-              <Button color="info" variant="text" size="small">Courses</Button>
-              <Button color="info" variant="text" size="small">Blog</Button>
-              <Button color="info" variant="text" size="small">Contact Us</Button>
-              <Button color="info" variant="text" size="small">FAQ</Button>
+               <Button color="info" variant="text" size="small" component={Link} href="/">Home</Button>
+                <Button color="info" variant="text" size="small" component={Link} href="/about-us">About Us</Button>
+                <Button color="info" variant="text" size="small" component={Link} href="/courses">Courses</Button>
+                <Button color="info" variant="text" size="small" component={Link} href="/blog">Blog</Button>
+                <Button color="info" variant="text" size="small" component={Link} href="/contact-us">Contact Us</Button>
+                <Button color="info" variant="text" size="small" component={Link} href="/faq">FAQ</Button>
             </Box>
           </Box>
 
@@ -94,11 +97,13 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
 
-                <MenuItem>About Us</MenuItem>
-                <MenuItem>Courses</MenuItem>
-                <MenuItem>Blog</MenuItem>
-                <MenuItem>Contact Us</MenuItem>
-                <MenuItem>FAQ</MenuItem>
+                <MenuItem component={Link} href="/">Home</MenuItem>
+                <MenuItem component={Link} href="/about-us">About Us</MenuItem>
+                <MenuItem component={Link} href="/courses">Courses</MenuItem>
+                <MenuItem component={Link} href="/blog">Blog</MenuItem>
+                <MenuItem component={Link} href="/contact-us">Contact Us</MenuItem>
+                <MenuItem component={Link} href="/faq">FAQ</MenuItem>
+
 
                 <Divider sx={{ my: 3 }} />
 

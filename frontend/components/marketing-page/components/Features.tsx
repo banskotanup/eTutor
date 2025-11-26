@@ -14,27 +14,27 @@ import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 const items = [
   {
     icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    title: 'Personalized Student Dashboard',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-dark.png")`,
+      'A student-focused dashboard showing upcoming classes, progress, assignments, and quick access to recorded lessons.',
+    imageLight: `url("/images/featurepic.jpg")`,
+    imageDark: `url("/images/featurepic.jpg")`,
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    title: 'Live & Interactive Tuition Classes',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-dark.png")`,
+      'Live online tuition with two-way interaction — screen sharing, live whiteboard, polls, and break-out rooms for group tasks.',
+    imageLight: `url("/images/lc.jpg")`,
+    imageDark: `url("/images/lc.jpg")`,
   },
   {
     icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    title: 'Assignments, Quizzes & Reports',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-dark.png")`,
+      'Create assignments and quizzes, collect submissions, grade them, and generate performance reports for students and parents.',
+    imageLight: `url("/images/ar.jpg")`,
+    imageDark: `url("/images/ar.jpg")`,
   },
 ];
 
@@ -85,17 +85,30 @@ export function MobileLayout({
         gap: 2,
       }}
     >
-      <Box sx={{ display: 'flex', gap: 2, overflow: 'auto' }}>
+      {/* Horizontally scrollable chips */}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          whiteSpace: 'nowrap',
+          px: 1,
+          '&::-webkit-scrollbar': { display: 'none' },
+        }}
+      >
         {items.map(({ title }, index) => (
-          <Chip
-            size="medium"
-            key={index}
-            label={title}
-            onClick={() => handleItemClick(index)}
-            selected={selectedItemIndex === index}
-          />
+          <Box key={index} sx={{ display: 'inline-block' }}>
+            <Chip
+              size="medium"
+              label={title}
+              onClick={() => handleItemClick(index)}
+              selected={selectedItemIndex === index}
+            />
+          </Box>
         ))}
       </Box>
+
       <Card variant="outlined">
         <Box
           sx={(theme) => ({
@@ -110,10 +123,10 @@ export function MobileLayout({
           })}
           style={
             items[selectedItemIndex]
-              ? ({
+              ? {
                   '--items-imageLight': items[selectedItemIndex].imageLight,
                   '--items-imageDark': items[selectedItemIndex].imageDark,
-                } as any)
+                } as any
               : {}
           }
         />
@@ -144,24 +157,31 @@ export default function Features() {
 
   return (
     <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
-      <Box sx={{ width: { sm: '100%', md: '60%' } }}>
+      {/* Centered heading and description */}
+      <Box
+        sx={{
+          width: { xs: '100%', sm: '100%', md: '60%' },
+          textAlign: { xs: 'left', sm: 'left', md: 'center' },
+          mx: 'auto',
+          mb: { xs: 4, sm: 6 },
+        }}
+      >
         <Typography
           component="h2"
           variant="h4"
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Product features
+          Features
         </Typography>
         <Typography
           variant="body1"
-          sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
+          sx={{ color: 'text.secondary' }}
         >
-          Provide a brief overview of the key features of the product. For example,
-          you could list the number of features, their types or benefits, and
-          add-ons.
+          Key capabilities for Virtual Education Hub — online tuition, interactive lessons, assessment, and progress tracking.
         </Typography>
       </Box>
+
       <Box
         sx={{
           display: 'flex',
@@ -215,7 +235,6 @@ export default function Features() {
                   ]}
                 >
                   {icon}
-
                   <Typography variant="h6">{title}</Typography>
                   <Typography variant="body2">{description}</Typography>
                 </Box>
@@ -228,6 +247,7 @@ export default function Features() {
             selectedFeature={selectedFeature}
           />
         </div>
+
         <Box
           sx={{
             display: { xs: 'none', sm: 'flex' },
@@ -257,10 +277,10 @@ export default function Features() {
               })}
               style={
                 items[selectedItemIndex]
-                  ? ({
+                  ? {
                       '--items-imageLight': items[selectedItemIndex].imageLight,
                       '--items-imageDark': items[selectedItemIndex].imageDark,
-                    } as any)
+                    } as any
                   : {}
               }
             />

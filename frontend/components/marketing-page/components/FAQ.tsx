@@ -26,7 +26,6 @@ export default function FAQ() {
       sx={{
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
-        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -42,108 +41,134 @@ export default function FAQ() {
           textAlign: { sm: 'left', md: 'center' },
         }}
       >
-        Frequently asked questions
+        Frequently Asked Questions
       </Typography>
+
       <Box sx={{ width: '100%' }}>
+        {/* FAQ 1 */}
         <Accordion
           expanded={expanded.includes('panel1')}
           onChange={handleChange('panel1')}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1d-content"
-            id="panel1d-header"
+            aria-controls="panel1-content"
+            id="panel1-header"
           >
             <Typography component="span" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              How do I enroll in a course?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography
               variant="body2"
-              gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              You can reach our customer support team by emailing&nbsp;
-              <Link href="mailto:support@email.com">support@email.com</Link>
-              &nbsp;or calling our toll-free number. We&apos;re here to assist you
-              promptly.
+              To enroll in a course, browse the course catalog, select your desired course,
+              and click on the “Enroll” button. Payment options are available for paid courses.
             </Typography>
           </AccordionDetails>
         </Accordion>
+
+        {/* FAQ 2 */}
         <Accordion
           expanded={expanded.includes('panel2')}
           onChange={handleChange('panel2')}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2d-content"
-            id="panel2d-header"
+            aria-controls="panel2-content"
+            id="panel2-header"
           >
             <Typography component="span" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+              Can I access recorded lessons after the live class?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography
               variant="body2"
-              gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              Yes! All live sessions are recorded and made available in your dashboard,
+              so you can review them anytime for better understanding.
             </Typography>
           </AccordionDetails>
         </Accordion>
+
+        {/* FAQ 3 */}
         <Accordion
           expanded={expanded.includes('panel3')}
           onChange={handleChange('panel3')}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel3d-content"
-            id="panel3d-header"
+            aria-controls="panel3-content"
+            id="panel3-header"
           >
             <Typography component="span" variant="subtitle2">
-              What makes your product stand out from others in the market?
+              How do I submit assignments and quizzes?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography
               variant="body2"
-              gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Our product distinguishes itself through its adaptability, durability,
-              and innovative features. We prioritize user satisfaction and
-              continually strive to exceed expectations in every aspect.
+              Assignments and quizzes can be submitted directly through the LMS. Each
+              course has a dedicated section for submitting tasks, and deadlines are
+              clearly displayed in your dashboard.
             </Typography>
           </AccordionDetails>
         </Accordion>
+
+        {/* FAQ 4 */}
         <Accordion
           expanded={expanded.includes('panel4')}
           onChange={handleChange('panel4')}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel4d-content"
-            id="panel4d-header"
+            aria-controls="panel4-content"
+            id="panel4-header"
           >
             <Typography component="span" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+              How can I track my learning progress?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography
               variant="body2"
-              gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
-              defects in materials and workmanship. If you encounter any issues
-              covered by the warranty, please contact our customer support for
-              assistance.
+              The LMS provides a personalized dashboard showing your completed lessons,
+              quiz scores, and overall progress. You can monitor your learning and
+              stay on track with upcoming tasks and deadlines.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* FAQ 5 */}
+        <Accordion
+          expanded={expanded.includes('panel5')}
+          onChange={handleChange('panel5')}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel5-content"
+            id="panel5-header"
+          >
+            <Typography component="span" variant="subtitle2">
+              Who can I contact for technical support?
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography
+              variant="body2"
+              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
+            >
+              For any technical issues, contact our support team via&nbsp;
+              <Link href="mailto:support@lms.com">support@lms.com</Link>.
+              We are available to help you quickly resolve any problems with your account or courses.
             </Typography>
           </AccordionDetails>
         </Accordion>

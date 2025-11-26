@@ -14,39 +14,39 @@ import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 const items = [
   {
     icon: <SettingsSuggestRoundedIcon />,
-    title: 'Adaptable performance',
+    title: 'Interactive Online Classes',
     description:
-      'Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.',
+      'Engage in live, interactive tuition with features like screen sharing, whiteboards, and polls.',
   },
   {
     icon: <ConstructionRoundedIcon />,
-    title: 'Built to last',
+    title: 'Personalized Dashboard',
     description:
-      'Experience unmatched durability that goes above and beyond with lasting investment.',
+      'Students can track upcoming classes, assignments, quizzes, and view their learning progress at a glance.',
   },
   {
     icon: <ThumbUpAltRoundedIcon />,
-    title: 'Great user experience',
+    title: 'Assignments & Quizzes',
     description:
-      'Integrate our product into your routine with an intuitive and easy-to-use interface.',
+      'Teachers can create and manage assignments and quizzes with automated grading and detailed reports.',
   },
   {
     icon: <AutoFixHighRoundedIcon />,
-    title: 'Innovative functionality',
+    title: 'Performance Tracking',
     description:
-      'Stay ahead with features that set new standards, addressing your evolving needs better than the rest.',
+      'Monitor student progress with analytics, reports, and insights to enhance learning outcomes.',
   },
   {
     icon: <SupportAgentRoundedIcon />,
-    title: 'Reliable support',
+    title: 'Reliable Support',
     description:
-      'Count on our responsive customer support, offering assistance that goes beyond the purchase.',
+      'Get assistance for any issues with responsive support for both students and educators.',
   },
   {
     icon: <QueryStatsRoundedIcon />,
-    title: 'Precision in every detail',
+    title: 'Accessible Anywhere',
     description:
-      'Enjoy a meticulously crafted product where small touches make a significant impact on your overall experience.',
+      'Our platform works across devices, ensuring seamless learning from desktops, tablets, and mobiles.',
   },
 ];
 
@@ -80,9 +80,8 @@ export default function Highlights() {
             Highlights
           </Typography>
           <Typography variant="body1" sx={{ color: 'grey.400' }}>
-            Explore why our product stands out: adaptability, durability,
-            user-friendly design, and innovation. Enjoy reliable customer support and
-            precision in every detail.
+            Discover the core features of Virtual Education Hub: interactive online classes, 
+            assignments & quizzes, personalized dashboards, progress tracking, support, and multi-device accessibility.
           </Typography>
         </Box>
         <Grid container spacing={2}>

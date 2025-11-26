@@ -13,44 +13,43 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 const tiers = [
   {
-    title: 'Free',
-    price: '0',
+    title: 'Basic',
+    price: '500',
     description: [
-      '10 users included',
-      '2 GB of storage',
-      'Help center access',
-      'Email support',
+      'Access to basic courses',
+      'View recorded lessons',
+      'Limited quizzes & assignments',
+      'Community support',
     ],
-    buttonText: 'Sign up for free',
+    buttonText: 'Get Started',
     buttonVariant: 'outlined',
     buttonColor: 'primary',
   },
   {
-    title: 'Professional',
-    subheader: 'Recommended',
-    price: '15',
+    title: 'Standard',
+    subheader: 'Most Popular',
+    price: '1000',
     description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-      'Dedicated team',
-      'Best deals',
+      'Access to all courses',
+      'Live interactive classes',
+      'Unlimited quizzes & assignments',
+      'Progress tracking',
+      'Email support',
     ],
-    buttonText: 'Start now',
+    buttonText: 'Subscribe Now',
     buttonVariant: 'contained',
     buttonColor: 'secondary',
   },
   {
-    title: 'Enterprise',
-    price: '30',
+    title: 'Premium',
+    price: '2000',
     description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
+      'All Standard features',
+      'Personal mentor support',
+      'Certificate on course completion',
+      'Priority assistance',
     ],
-    buttonText: 'Contact us',
+    buttonText: 'Contact Us',
     buttonVariant: 'outlined',
     buttonColor: 'primary',
   },
@@ -70,10 +69,13 @@ export default function Pricing() {
         gap: { xs: 3, sm: 6 },
       }}
     >
+      {/* Heading */}
       <Box
         sx={{
-          width: { sm: '100%', md: '60%' },
-          textAlign: { sm: 'left', md: 'center' },
+          width: { xs: '100%', sm: '100%', md: '60%' },
+          textAlign: { xs: 'left', sm: 'left', md: 'center' },
+          mx: 'auto',
+          mb: { xs: 4, sm: 6 },
         }}
       >
         <Typography
@@ -82,15 +84,14 @@ export default function Pricing() {
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Pricing
+          LMS Pricing
         </Typography>
         <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-          Quickly build an effective pricing table for your potential customers with
-          this layout. <br />
-          It&apos;s built with default Material UI components with little
-          customization.
+          Choose a plan that suits your learning needs. All prices are in Nepalese Rupees (NRS) per month.
         </Typography>
       </Box>
+
+      {/* Pricing Cards */}
       <Grid
         container
         spacing={3}
@@ -98,7 +99,7 @@ export default function Pricing() {
       >
         {tiers.map((tier) => (
           <Grid
-            size={{ xs: 12, sm: tier.title === 'Enterprise' ? 12 : 6, md: 4 }}
+            size={{ xs: 12, sm: tier.title === 'Premium' ? 12 : 6, md: 4 }}
             key={tier.title}
           >
             <Card
@@ -109,7 +110,7 @@ export default function Pricing() {
                   flexDirection: 'column',
                   gap: 4,
                 },
-                tier.title === 'Professional' &&
+                tier.title === 'Standard' &&
                   ((theme) => ({
                     border: 'none',
                     background:
@@ -133,15 +134,13 @@ export default function Pricing() {
                       alignItems: 'center',
                       gap: 2,
                     },
-                    tier.title === 'Professional'
-                      ? { color: 'grey.100' }
-                      : { color: '' },
+                    tier.title === 'Standard' ? { color: 'grey.100' } : {},
                   ]}
                 >
                   <Typography component="h3" variant="h6">
                     {tier.title}
                   </Typography>
-                  {tier.title === 'Professional' && (
+                  {tier.title === 'Standard' && (
                     <Chip icon={<AutoAwesomeIcon />} label={tier.subheader} />
                   )}
                 </Box>
@@ -151,16 +150,14 @@ export default function Pricing() {
                       display: 'flex',
                       alignItems: 'baseline',
                     },
-                    tier.title === 'Professional'
-                      ? { color: 'grey.50' }
-                      : { color: null },
+                    tier.title === 'Standard' ? { color: 'grey.50' } : {},
                   ]}
                 >
                   <Typography component="h3" variant="h2">
-                    ${tier.price}
+                    NRs {tier.price}
                   </Typography>
                   <Typography component="h3" variant="h6">
-                    &nbsp; per month
+                    &nbsp; / month
                   </Typography>
                 </Box>
                 <Divider sx={{ my: 2, opacity: 0.8, borderColor: 'divider' }} />
@@ -171,10 +168,8 @@ export default function Pricing() {
                   >
                     <CheckCircleRoundedIcon
                       sx={[
-                        {
-                          width: 20,
-                        },
-                        tier.title === 'Professional'
+                        { width: 20 },
+                        tier.title === 'Standard'
                           ? { color: 'primary.light' }
                           : { color: 'primary.main' },
                       ]}
@@ -183,9 +178,7 @@ export default function Pricing() {
                       variant="subtitle2"
                       component={'span'}
                       sx={[
-                        tier.title === 'Professional'
-                          ? { color: 'grey.50' }
-                          : { color: null },
+                        tier.title === 'Standard' ? { color: 'grey.50' } : {},
                       ]}
                     >
                       {line}
