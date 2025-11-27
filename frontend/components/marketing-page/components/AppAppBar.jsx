@@ -58,7 +58,6 @@ export default function AppAppBar() {
                <Button color="info" variant="text" size="small" component={Link} href="/">Home</Button>
                 <Button color="info" variant="text" size="small" component={Link} href="/about-us">About Us</Button>
                 <Button color="info" variant="text" size="small" component={Link} href="/courses">Courses</Button>
-                <Button color="info" variant="text" size="small" component={Link} href="/blog">Blog</Button>
                 <Button color="info" variant="text" size="small" component={Link} href="/contact-us">Contact Us</Button>
                 <Button color="info" variant="text" size="small" component={Link} href="/faq">FAQ</Button>
             </Box>

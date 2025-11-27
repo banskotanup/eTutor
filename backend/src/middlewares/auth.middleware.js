@@ -4,11 +4,13 @@ const prisma = new PrismaClient();
 
 exports.authMiddleware = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    // Check cookie first
+    const token = req.cookies[process.env.COOKIE_NAME || "token"] 
+      // fallback to Authorization header
+      || req.headers.authorization?.split(" ")[1];
+
     if (!token) {
-      return res.status(401).json({
-        message: "Access denied. No token provided.",
-      });
+      return res.status(401).json({ message: "Access denied. No token provided." });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -29,8 +31,6 @@ exports.authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    return res.status(401).json({
-      message: "Invalid or expired token",
-    });
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
