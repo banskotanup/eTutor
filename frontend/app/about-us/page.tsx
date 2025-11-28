@@ -83,7 +83,7 @@ export default function AboutUs() {
               >
                 Our Learning Management System brings the classroom online. Whether it’s live lectures, interactive assignments, or detailed analytics, our platform helps educators teach efficiently and students learn effectively.
               </Typography>
-              <Button variant="contained" color="primary" size="large">
+              <Button variant="contained" color="primary" size="large" href="/register">
                 Get Started
               </Button>
             </Box>

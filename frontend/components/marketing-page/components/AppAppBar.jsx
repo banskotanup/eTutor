@@ -99,7 +99,6 @@ export default function AppAppBar() {
                 <MenuItem component={Link} href="/">Home</MenuItem>
                 <MenuItem component={Link} href="/about-us">About Us</MenuItem>
                 <MenuItem component={Link} href="/courses">Courses</MenuItem>
-                <MenuItem component={Link} href="/blog">Blog</MenuItem>
                 <MenuItem component={Link} href="/contact-us">Contact Us</MenuItem>
                 <MenuItem component={Link} href="/faq">FAQ</MenuItem>
 

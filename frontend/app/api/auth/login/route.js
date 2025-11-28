@@ -14,7 +14,21 @@ export async function POST(req) {
       headers: { "Content-Type": "application/json" },
     });
 
-    const { token, user } = resp.data;
+    const data = resp.data;
+
+    // Handle pending users
+    if (data.status === "pending") {
+      return NextResponse.json({ status: "pending", message: data.message }, { status: 200 });
+    }
+
+    // Handle rejected users
+    if (data.status === "rejected") {
+      return NextResponse.json({ status: "rejected", message: data.message }, { status: 200 });
+    }
+
+    // Approved users must have token
+    const { token, user } = data;
+
     if (!token) {
       return NextResponse.json({ message: "No token from backend" }, { status: 500 });
     }

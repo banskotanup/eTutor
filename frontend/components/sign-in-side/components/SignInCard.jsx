@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
 import ForgotPassword from "./ForgotPassword";
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from "./CustomIcons";
+import { GoogleIcon, FacebookIcon, LMSIcon } from "./CustomIcons";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -79,6 +79,28 @@ export default function SignInCard() {
     return valid;
   };
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   setSubmitError("");
+
+  //   if (!validateInputs()) return;
+
+  //   setLoading(true);
+
+  //   try {
+  //     const user = await login(email, password); // real AuthContext login
+
+  //     // Role-based redirect
+  //     if (user.role === "admin") router.push("/admin/dashboard");
+  //     else if (user.role === "teacher") router.push("/teacher/dashboard");
+  //     else router.push("/student/dashboard");
+  //   } catch (error) {
+  //     setSubmitError(error instanceof Error ? error.message : "Failed to login");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitError("");
@@ -88,14 +110,26 @@ export default function SignInCard() {
     setLoading(true);
 
     try {
-      const user = await login(email, password); // real AuthContext login
+      const result = await login(email, password);
 
-      // Role-based redirect
-      if (user.role === "admin") router.push("/admin/dashboard");
-      else if (user.role === "teacher") router.push("/teacher/dashboard");
-      else router.push("/student/dashboard");
+      if (result.status === "pending") {
+        router.push("/verification");
+        return;
+      }
+
+      if (result.status === "rejected") {
+        router.push("/rejected");
+        return;
+      }
+
+      if (result.status === "approved") {
+        const user = result.user;
+        if (user.role === "admin") router.push("/admin/dashboard");
+        else if (user.role === "teacher") router.push("/teacher/dashboard");
+        else router.push("/student/dashboard");
+      }
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : "Failed to login");
+      setSubmitError(error?.message || "Failed to login");
     } finally {
       setLoading(false);
     }
@@ -104,13 +138,22 @@ export default function SignInCard() {
   return (
     <Card variant="outlined">
       <Box sx={{ display: { xs: "flex", md: "none" } }}>
-        <SitemarkIcon />
+        <LMSIcon />
       </Box>
-      <Typography component="h1" variant="h4" sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}>
+      <Typography
+        component="h1"
+        variant="h4"
+        sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+      >
         Sign in
       </Typography>
       {submitError && <Typography color="error">{submitError}</Typography>}
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
         <FormControl>
           <FormLabel htmlFor="email">Email</FormLabel>
           <TextField
@@ -148,7 +191,10 @@ export default function SignInCard() {
           />
         </FormControl>
 
-        <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+        <FormControlLabel
+          control={<Checkbox value="remember" color="primary" />}
+          label="Remember me"
+        />
         <ForgotPassword open={open} handleClose={handleClose} />
 
         <Button type="submit" fullWidth variant="contained" disabled={loading}>
@@ -165,10 +211,20 @@ export default function SignInCard() {
 
       <Divider>or</Divider>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Button fullWidth variant="outlined" onClick={() => alert("Sign in with Google")} startIcon={<GoogleIcon />}>
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => alert("Sign in with Google")}
+          startIcon={<GoogleIcon />}
+        >
           Sign in with Google
         </Button>
-        <Button fullWidth variant="outlined" onClick={() => alert("Sign in with Facebook")} startIcon={<FacebookIcon />}>
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => alert("Sign in with Facebook")}
+          startIcon={<FacebookIcon />}
+        >
           Sign in with Facebook
         </Button>
       </Box>

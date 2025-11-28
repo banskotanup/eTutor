@@ -191,6 +191,7 @@ export default function Hero() {
                 borderRadius: "12px",
                 textTransform: "none",
               }}
+              href="/register"
             >
               Join Now
             </Button>

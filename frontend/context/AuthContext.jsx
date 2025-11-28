@@ -1,4 +1,3 @@
-// context/AuthContext.jsx
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
@@ -15,9 +14,38 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({ email, password }),
       credentials: "include",
     });
-    if (!res.ok) throw new Error("Invalid credentials");
+
     const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || "Invalid credentials");
+
+    // Handle pending user
+    if (data.status === "pending") {
+      return { status: "pending" };
+    }
+
+    // Handle rejected user
+    if (data.status === "rejected") {
+      return { status: "rejected" };
+    }
+
+    // APPROVED – save user
     setUser(data.user);
+    return { status: "approved", user: data.user };
+  };
+
+  const register = async (payload) => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || "Failed to register");
+    }
+    const data = await res.json();
     return data.user;
   };
 
@@ -37,7 +65,11 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout, register }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);
