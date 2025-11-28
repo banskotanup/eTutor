@@ -6,67 +6,92 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
-  const login = async (email, password) => {
+  // -------------------------------
+  // LOGIN (send rememberMe)
+  // -------------------------------
+  const login = async (email, password, rememberMe) => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, rememberMe }),
       credentials: "include",
     });
 
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.message || "Invalid credentials");
 
-    // Handle pending user
-    if (data.status === "pending") {
-      return { status: "pending" };
-    }
+    if (data.status === "pending") return { status: "pending" };
+    if (data.status === "rejected") return { status: "rejected" };
 
-    // Handle rejected user
-    if (data.status === "rejected") {
-      return { status: "rejected" };
-    }
-
-    // APPROVED – save user
+    setAccessToken(data.token);
     setUser(data.user);
+
     return { status: "approved", user: data.user };
   };
 
-  const register = async (payload) => {
-    const res = await fetch("/api/auth/register", {
+  // -------------------------------
+  // LOGOUT
+  // -------------------------------
+  const logout = async () => {
+    await fetch("/api/auth/logout", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
       credentials: "include",
     });
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || "Failed to register");
-    }
-    const data = await res.json();
-    return data.user;
-  };
 
-  const logout = async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     setUser(null);
+    setAccessToken(null);
   };
 
+  // -------------------------------
+  // REFRESH TOKEN (on demand)
+  // -------------------------------
+  const refreshAccessToken = async () => {
+    try {
+      const res = await fetch("/api/auth/refresh", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!res.ok) return null;
+
+      const data = await res.json();
+      setAccessToken(data.accessToken);
+      return data.accessToken;
+    } catch (err) {
+      console.log("Refresh failed:", err);
+      return null;
+    }
+  };
+
+  // -------------------------------
+  // AUTO LOGIN USING REFRESH TOKEN (on page load)
+  // -------------------------------
   useEffect(() => {
-    const fetchUser = async () => {
+    const loadUser = async () => {
       const res = await fetch("/api/auth/me", { credentials: "include" });
+
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
+        setAccessToken(data.token);
       }
     };
-    fetchUser();
+
+    loadUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        accessToken,
+        login,
+        logout,
+        refreshAccessToken,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

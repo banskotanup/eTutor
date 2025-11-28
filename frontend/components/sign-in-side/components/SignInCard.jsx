@@ -44,6 +44,8 @@ export default function SignInCard() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -67,50 +69,27 @@ export default function SignInCard() {
       setEmailErrorMessage("");
     }
 
-    // if (!password || password.length < 6) {
-    //   setPasswordError(true);
-    //   setPasswordErrorMessage("Password must be at least 6 characters.");
-    //   valid = false;
-    // } else {
-    //   setPasswordError(false);
-    //   setPasswordErrorMessage("");
-    // }
+    if (!password || password.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage("Password must be at least 6 characters.");
+      valid = false;
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMessage("");
+    }
 
     return valid;
   };
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   setSubmitError("");
-
-  //   if (!validateInputs()) return;
-
-  //   setLoading(true);
-
-  //   try {
-  //     const user = await login(email, password); // real AuthContext login
-
-  //     // Role-based redirect
-  //     if (user.role === "admin") router.push("/admin/dashboard");
-  //     else if (user.role === "teacher") router.push("/teacher/dashboard");
-  //     else router.push("/student/dashboard");
-  //   } catch (error) {
-  //     setSubmitError(error instanceof Error ? error.message : "Failed to login");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitError("");
 
     if (!validateInputs()) return;
-
     setLoading(true);
 
     try {
-      const result = await login(email, password);
+      const result = await login(email, password, rememberMe);
 
       if (result.status === "pending") {
         router.push("/verification");
@@ -140,6 +119,7 @@ export default function SignInCard() {
       <Box sx={{ display: { xs: "flex", md: "none" } }}>
         <LMSIcon />
       </Box>
+
       <Typography
         component="h1"
         variant="h4"
@@ -147,7 +127,9 @@ export default function SignInCard() {
       >
         Sign in
       </Typography>
+
       {submitError && <Typography color="error">{submitError}</Typography>}
+
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -191,13 +173,21 @@ export default function SignInCard() {
           />
         </FormControl>
 
+        {/* 🔥 FIXED REMEMBER ME */}
         <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
+          control={
+            <Checkbox
+              color="primary"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+          }
           label="Remember me"
         />
+
         <ForgotPassword open={open} handleClose={handleClose} />
 
-        <Button type="submit" fullWidth variant="contained" disabled={loading}>
+        <Button type="submit" fullWidth variant="contained">
           {loading ? "Logging in..." : "Sign in"}
         </Button>
 
@@ -210,21 +200,12 @@ export default function SignInCard() {
       </Box>
 
       <Divider>or</Divider>
+
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => alert("Sign in with Google")}
-          startIcon={<GoogleIcon />}
-        >
+        <Button fullWidth variant="outlined" startIcon={<GoogleIcon />}>
           Sign in with Google
         </Button>
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => alert("Sign in with Facebook")}
-          startIcon={<FacebookIcon />}
-        >
+        <Button fullWidth variant="outlined" startIcon={<FacebookIcon />}>
           Sign in with Facebook
         </Button>
       </Box>

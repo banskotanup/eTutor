@@ -6,6 +6,10 @@ const authRouter = Router();
 
 authRouter.post("/register", authController.register);
 authRouter.post("/login", authController.login);
+authRouter.post("/refresh-token", authController.refreshAccessToken);
+authRouter.post("/logout", authMiddleware, authController.logout);
 authRouter.get("/me", authMiddleware, authController.getMe);
+authRouter.post("/forgot-password", authController.forgotPassword);
+authRouter.put("/reset-password", authController.resetPassword);
 
 module.exports = authRouter;
