@@ -90,3 +90,15 @@ exports.login = async (req, res) => {
         });
     }
 };
+
+exports.getMe = async (req, res) => {
+    try {
+        return res.json({
+            user: req.user,
+        });
+    }  
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Server error" });
+    }
+};

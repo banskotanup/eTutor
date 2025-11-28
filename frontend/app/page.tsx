@@ -1,7 +1,30 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
+import MarketingPage from "../components/marketing-page/LandingPage";
+import AppTheme from "../components/shared-theme/AppTheme";
+
+export default function LandingPage() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      // Redirect logged-in users to their respective dashboards
+      if (user.role === "admin") router.replace("/admin/dashboard");
+      else if (user.role === "teacher") router.replace("/teacher/dashboard");
+      else if (user.role === "student") router.replace("/student/dashboard");
+    }
+  }, [user, router]);
+
+  // Prevent showing landing page to logged-in users
+  if (user !== undefined && user !== null) return null;
+
   return (
-    <h1>Hello next js</h1>
+    <AppTheme>
+      <MarketingPage />
+    </AppTheme>
   );
 }

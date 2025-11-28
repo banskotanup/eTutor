@@ -10,6 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 //enums
@@ -230,4 +231,13 @@ model Message{
 
   receiverId Int
   receiver User @relation("Receiver", fields:[receiverId], references: [id])
+}
+
+//12. Contact us 
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
 }
