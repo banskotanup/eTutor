@@ -7,7 +7,7 @@ import ColorModeSelect from "../shared-theme/ColorModeSelect";
 import SignInCard from "./components/SignInCard";
 import Content from "./components/Content";
 
-export default function SignInSide(props) {
+export default function SignInSide({successMsg = null, ...props}) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -68,7 +68,7 @@ export default function SignInSide(props) {
             }}
           >
             <Content />
-            <SignInCard /> {/* Uses real AuthContext login */}
+            <SignInCard successMsg={successMsg} />
           </Stack>
         </Stack>
       </Stack>

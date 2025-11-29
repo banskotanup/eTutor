@@ -3,30 +3,137 @@ const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const otpStore = {}; // Temporary in-memory store
 
 const prisma = new PrismaClient();
 
 //Register
 
-exports.register = async (req, res) => {
+// exports.register = async (req, res) => {
+//   try {
+//     const { firstName, lastName, email, phone, password, role } = req.body;
+
+//     //check existing user
+//     const existingUser = await prisma.user.findUnique({
+//       where: { email },
+//     });
+
+//     if (existingUser) {
+//       return res.status(400).json({
+//         message: "Email already exists",
+//       });
+//     }
+
+//     //hash password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     //create user
+//     const user = await prisma.user.create({
+//       data: {
+//         firstName,
+//         lastName,
+//         email,
+//         phone,
+//         password: hashedPassword,
+//         role: role || "student",
+//         status: "pending",
+//       },
+//     });
+//     return res.status(201).json({
+//       message: "User registered successfully",
+//       user,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({
+//       message: "Server error",
+//     });
+//   }
+// };
+
+// ----------------------
+// Step 1: Send OTP
+// ----------------------
+exports.sendOtp = async (req, res) => {
   try {
     const { firstName, lastName, email, phone, password, role } = req.body;
 
-    //check existing user
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser)
+      return res.status(400).json({ message: "Email already exists" });
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Store user details temporarily with OTP
+    otpStore[email] = {
+      otp,
+      payload: { firstName, lastName, email, phone, password, role },
+    };
+
+    // Clear OTP automatically after 10 minutes
+    setTimeout(() => {
+      delete otpStore[email];
+    }, 10 * 60 * 1000); // 10 minutes
+
+    // Send OTP email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS, // Use Gmail App Password
+      },
     });
 
-    if (existingUser) {
-      return res.status(400).json({
-        message: "Email already exists",
-      });
-    }
+    await transporter.sendMail({
+      from: `"LMS Support" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Your LMS Registration OTP 🔒",
+      html: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+      <h2 style="color: #1976d2;">Hello ${firstName || email},</h2>
+      <p>Thank you for registering with <strong>LMS</strong>. To complete your registration, please use the One-Time Password (OTP) below:</p>
+      <div style="margin: 20px 0; padding: 15px; background-color: #f0f4ff; text-align: center; border-radius: 8px; font-size: 1.5rem; letter-spacing: 2px; font-weight: bold;">
+        ${otp}
+      </div>
+      <p>This OTP is valid for <strong>10 minutes</strong>. Do not share it with anyone.</p>
+      <p>If you did not request this, you can safely ignore this email.</p>
+      <br/>
+      <p>Best regards,<br/><strong>The LMS Team</strong></p>
+      <hr style="border:none; border-top:1px solid #eee; margin-top:20px;">
+      <p style="font-size:0.85rem; color:#888;">Need help? Contact us at <a href="mailto:support@lms.com">support@lms.com</a></p>
+    </div>
+  `,
+    });
 
-    //hash password
+    return res.json({ message: "OTP sent to email" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ----------------------
+// Step 2: Verify OTP & Register
+// ----------------------
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!otpStore[email])
+      return res.status(400).json({ message: "No OTP found for this email" });
+    if (otpStore[email].otp !== otp)
+      return res.status(400).json({ message: "Invalid OTP" });
+
+    // Extract user data from store
+    const { firstName, lastName, phone, password, role } =
+      otpStore[email].payload;
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //create user
+    // Create user in DB
     const user = await prisma.user.create({
       data: {
         firstName,
@@ -35,18 +142,19 @@ exports.register = async (req, res) => {
         phone,
         password: hashedPassword,
         role: role || "student",
-        status: "pending",
+        status: "pending", // User is active immediately
       },
     });
-    return res.status(201).json({
-      message: "User registered successfully",
-      user,
-    });
+
+    // Cleanup
+    delete otpStore[email];
+
+    return res
+      .status(201)
+      .json({ message: "User registered successfully", user });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
-      message: "Server error",
-    });
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -96,11 +204,9 @@ exports.login = async (req, res) => {
     let refreshToken = null;
 
     if (rememberMe) {
-      refreshToken = jwt.sign(
-        { id: user.id },
-        process.env.JWT_SECRET,
-        { expiresIn: "30d" }
-      );
+      refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      });
 
       // Store hashed refresh token in DB
       const hashed = await bcrypt.hash(refreshToken, 10);
@@ -141,7 +247,6 @@ exports.login = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
 
 exports.getMe = async (req, res) => {
   try {
@@ -236,14 +341,17 @@ exports.resetPassword = async (req, res) => {
         .json({ message: "Token and password are required" });
 
     if (password.length < 6)
-      return res.status(400).json({ message: "Password must be at least 6 characters" });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
 
     // Find user with token and valid expiry
     const user = await prisma.user.findFirst({
       where: { resetToken: token, resetTokenExpiry: { gt: new Date() } },
     });
 
-    if (!user) return res.status(400).json({ message: "Invalid or expired token" });
+    if (!user)
+      return res.status(400).json({ message: "Invalid or expired token" });
 
     // Hash new password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -263,7 +371,6 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 // --------------------------------------------
 // REFRESH ACCESS TOKEN
@@ -294,7 +401,6 @@ exports.refreshAccessToken = async (req, res) => {
 
   return res.json({ accessToken });
 };
-
 
 // --------------------------------------------
 // LOGOUT

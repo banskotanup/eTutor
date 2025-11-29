@@ -16,6 +16,7 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import Alert from "@mui/material/Alert";
 
 import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon, FacebookIcon, LMSIcon } from "./CustomIcons";
@@ -38,7 +39,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-export default function SignInCard() {
+export default function SignInCard({ successMsg }) {
   const router = useRouter();
   const { login } = useAuth();
 
@@ -127,6 +128,12 @@ export default function SignInCard() {
       >
         Sign in
       </Typography>
+
+      {successMsg && (
+        <Alert severity="success" sx={{ mt: 2, mb: 1 }}>
+          {successMsg}
+        </Alert>
+      )}
 
       {submitError && <Typography color="error">{submitError}</Typography>}
 
