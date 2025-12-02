@@ -7,6 +7,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
+import { usePathname } from "next/navigation"; // Next.js 13 hook
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
@@ -43,6 +44,8 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export default function MenuContent({ menu = [] }: MenuContentProps) {
+  const pathname = usePathname(); // current route
+
   const mainListItems = menu;
   const secondaryListItems = [
     { label: "Settings", href: "/settings" },
@@ -50,8 +53,14 @@ export default function MenuContent({ menu = [] }: MenuContentProps) {
     { label: "Feedback", href: "/feedback" },
   ];
 
+  // Function to check if a menu item is active
+  const isActive = (href: string) => {
+    return pathname === href;
+  };
+
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: "space-between" }}>
+      {/* Main Menu */}
       <List dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: "block" }}>
@@ -59,7 +68,7 @@ export default function MenuContent({ menu = [] }: MenuContentProps) {
               href={item.href}
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <ListItemButton selected={index === 0}>
+              <ListItemButton selected={isActive(item.href)}>
                 {iconMap[item.label] && (
                   <ListItemIcon>{iconMap[item.label]}</ListItemIcon>
                 )}
@@ -69,6 +78,8 @@ export default function MenuContent({ menu = [] }: MenuContentProps) {
           </ListItem>
         ))}
       </List>
+
+      {/* Secondary Menu */}
       <List dense>
         {secondaryListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: "block" }}>
@@ -76,7 +87,7 @@ export default function MenuContent({ menu = [] }: MenuContentProps) {
               href={item.href}
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <ListItemButton>
+              <ListItemButton selected={isActive(item.href)}>
                 {iconMap[item.label] && (
                   <ListItemIcon>{iconMap[item.label]}</ListItemIcon>
                 )}

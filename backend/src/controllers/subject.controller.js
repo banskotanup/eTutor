@@ -90,7 +90,45 @@ exports.updateSubject = async (req, res) => {
 //get all subject (admin)
 exports.getAllSubjects = async (req, res) => {
   try {
-    const subjects = await prisma.subject.findMany({
+    const page = Number(req.query.page) || 0;
+    const pageSize = Number(req.query.pageSize) || 10;
+
+    const [subjects, total] = await Promise.all([
+      prisma.subject.findMany({
+        skip: page * pageSize,
+        take: pageSize,
+        include: {
+          teacher: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      }),
+      prisma.subject.count(),
+    ]);
+
+    const formatted = subjects.map((s) => ({
+      ...s,
+      teacherName: s.teacher
+        ? `${s.teacher.firstName} ${s.teacher.lastName}`
+        : "",
+    }));
+
+    return res.json({ rows: formatted, total });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getSubjectById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const subject = await prisma.subject.findUnique({
+      where: { id: Number(id) },
       include: {
         teacher: {
           select: {
@@ -101,9 +139,20 @@ exports.getAllSubjects = async (req, res) => {
         },
       },
     });
-    return res.json(subjects);
+
+    if (!subject) {
+      return res.status(404).json({ message: "Subject not found" });
+    }
+
+    // Include teacherName in response
+    const subjectWithTeacherName = {
+      ...subject,
+      teacherName: `${subject.teacher.firstName} ${subject.teacher.lastName}`,
+    };
+
+    return res.json(subjectWithTeacherName);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res.status(500).json({ message: "Server error" });
   }
 };

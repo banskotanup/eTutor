@@ -31,8 +31,6 @@ export default function SideMenuMobile({
   onLogout,
 }: SideMenuMobileProps) {
   const { user } = useAuth();
-  console.log("User:", user);
-  console.log("Menu:", menu);
 
   if (!user) return null;
 
