@@ -17,6 +17,7 @@ import {
   GridSortModel,
   GridEventListener,
   gridClasses,
+  GridDownloadIcon,
 } from "@mui/x-data-grid";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -177,7 +178,7 @@ export default function UserList() {
 
   // Columns
   const columns: GridColDef<User>[] = [
-    { field: "id", headerName: "ID", width: 70 },
+    { field: "id", headerName: "ID", width: 80 },
     { field: "userName", headerName: "Name", width: 200 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "phone", headerName: "Phone", width: 150 },
@@ -312,13 +313,35 @@ export default function UserList() {
             </IconButton>
           </Tooltip>
 
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleCreateClick}
-          >
-            Create
-          </Button>
+          <Tooltip title="Export Users">
+            <IconButton
+              size="small"
+              onClick={() => {
+                const csvContent =
+                  "data:text/csv;charset=utf-8," +
+                  ["ID,Name,Email,Phone,Role,Status"]
+                    .concat(
+                      users.rows.map(
+                        (u) =>
+                          `${u.id},${u.fullName},${u.email},${u.phone || ""},${
+                            u.role
+                          },${u.status || "pending"}`
+                      )
+                    )
+                    .join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "users.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+            >
+              <GridDownloadIcon />{" "}
+              {/* You can replace with a FileDownloadIcon */}
+            </IconButton>
+          </Tooltip>
         </Stack>
       }
     >
@@ -340,12 +363,29 @@ export default function UserList() {
             onSortModelChange={handleSortModelChange}
             sortingMode="server"
             loading={isLoading}
+            showToolbar
             disableRowSelectionOnClick
             onRowClick={handleRowClick}
             pageSizeOptions={[5, 10, 25]}
             sx={{
+              [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
+                outline: "transparent",
+              },
+              [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]:
+                {
+                  outline: "none",
+                },
               [`& .${gridClasses.row}:hover`]: {
                 cursor: "pointer",
+              },
+            }}
+            slotProps={{
+              loadingOverlay: {
+                variant: "circular-progress",
+                noRowsVariant: "circular-progress",
+              },
+              baseIconButton: {
+                size: "small",
               },
             }}
           />

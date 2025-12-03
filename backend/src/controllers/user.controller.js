@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const sendStatusEmail = require('../utils/sendStatusEmail');
+const sendUserUpdateEmail = require('../utils/sendUserUpdateEmail');
 
 //get all users (admin only)
 exports.getUsers = async (req, res) => {
@@ -41,6 +42,43 @@ exports.getUsers = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+//get user by id
+exports.getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { id: Number(id) },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json({
+      ...user,
+      fullName: `${user.firstName} ${user.lastName}`,
+      createdAtFormatted: new Date(user.createdAt).toLocaleString(),
+      updatedAtFormatted: new Date(user.updatedAt).toLocaleString(),
+    });
+
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -162,4 +200,29 @@ exports.deleteUser = async (req, res) => {
             message: "Server error"
         });
     }
+};
+
+// Example user update controller
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email, phone, role, status } = req.body;
+
+    const user = await prisma.user.update({
+      where: { id: Number(id) },
+      data: { firstName, lastName, email, phone, role, status },
+    });
+
+    // Send email notification
+    try {
+      await sendUserUpdateEmail(user.email, user.firstName);
+    } catch (err) {
+      console.error("Failed to send user update email:", err);
+    }
+
+    return res.json({ message: "User updated successfully", user });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
 };
