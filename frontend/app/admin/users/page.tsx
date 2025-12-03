@@ -2,7 +2,7 @@
 
 import Dashboard from "@/components/dashboard/Dashboard";
 import { adminMenu } from "@/components/dashboard/menus";
-import CrudDashboard from "@/components/admin-pages/subject-dashboard/SubjectDashboard";
+import UserDashboard from "@/components/admin-pages/user-dashboard/UserDashboard";
 import NotificationsProvider from "@/components/admin-pages/subject-dashboard/hooks/useNotifications/NotificationsProvider";
 import DialogsProvider from "@/components/admin-pages/subject-dashboard/hooks/useDialogs/DialogsProvider";
 
@@ -11,7 +11,7 @@ export default function AdminSubjectsPage() {
     <Dashboard menu={adminMenu} title="Manage Subjects">
       <NotificationsProvider>
         <DialogsProvider>
-          <CrudDashboard />
+          <UserDashboard />
         </DialogsProvider>
       </NotificationsProvider>
     </Dashboard>

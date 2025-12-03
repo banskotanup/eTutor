@@ -9,8 +9,8 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AppAppBar from "../../components/marketing-page/components/AppAppBar";
-import Footer from "../../components/marketing-page/components/Footer";
+import AppAppBar from "../../components/landing-page/components/AppAppBar";
+import Footer from "../../components/landing-page/components/Footer";
 import AppTheme from "../../components/shared-theme/AppTheme";
 
 export default function FAQPage() {

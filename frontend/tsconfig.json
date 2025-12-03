@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/layout.jsx", "components/sign-in-side/components/SignInCard.jsx", "components/marketing-page/components/AppAppBar.jsx", "components/marketing-page/components/Features.tsx"  ],
+, "app/layout.jsx", "components/sign-in-side/components/SignInCard.jsx", "components/landing-page/components/AppAppBar.jsx", "components/landing-page/components/Features.tsx"  ],
   "exclude": ["node_modules"]
 }

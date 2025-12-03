@@ -8,8 +8,8 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import AppAppBar from "../../components/marketing-page/components/AppAppBar";
-import Footer from "../../components/marketing-page/components/Footer";
+import AppAppBar from "../../components/landing-page/components/AppAppBar";
+import Footer from "../../components/landing-page/components/Footer";
 import AppTheme from "../../components/shared-theme/AppTheme";
 
 export default function ContactUs() {

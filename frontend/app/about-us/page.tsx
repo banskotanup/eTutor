@@ -9,8 +9,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
-import AppAppBar from "../../components/marketing-page/components/AppAppBar";
-import Footer from "../../components/marketing-page/components/Footer";
+import AppAppBar from "../../components/landing-page/components/AppAppBar";
+import Footer from "../../components/landing-page/components/Footer";
 import AppTheme from "../../components/shared-theme/AppTheme";
 
 const teamMembers = [

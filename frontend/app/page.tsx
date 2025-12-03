@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
-import MarketingPage from "../components/marketing-page/LandingPage";
+import LandingPage from "../components/landing-page/LandingPage";
 import AppTheme from "../components/shared-theme/AppTheme";
 
-export default function LandingPage() {
+export default function LandingPageHome() {
   const { user } = useAuth();
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export default function LandingPage() {
 
   return (
     <AppTheme>
-      <MarketingPage />
+      <LandingPage />
     </AppTheme>
   );
 }
