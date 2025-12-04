@@ -1,8 +1,8 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
-import UserShow from './components/EmployeeShow';
+import UserShow from './components/UserShow';
 import EmployeeCreate from './components/UserCreate';
-import UserEdit from './components/EmployeeEdit';
+import UserEdit from './components/UserEdit';
 import NotificationsProvider from './hooks/useNotifications/NotificationsProvider';
 import DialogsProvider from './hooks/useDialogs/DialogsProvider';
 import AppTheme from '../../shared-theme/AppTheme';

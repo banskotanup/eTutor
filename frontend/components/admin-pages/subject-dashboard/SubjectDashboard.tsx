@@ -1,9 +1,9 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
-import DashboardLayout from './components/DashboardLayout';
-import EmployeeShow from './components/EmployeeShow';
-import EmployeeCreate from './components/EmployeeCreate';
-import EmployeeEdit from './components/EmployeeEdit';
+
+import SubjectShow from './components/SubjectShow';
+import SubjectCreate from './components/SubjectCreate';
+import SubjectEdit from './components/SubjectEdit';
 import NotificationsProvider from './hooks/useNotifications/NotificationsProvider';
 import DialogsProvider from './hooks/useDialogs/DialogsProvider';
 import AppTheme from '../../shared-theme/AppTheme';
@@ -23,16 +23,16 @@ const router = createHashRouter([
         Component: SubjectList,
       },
       {
-        path: '/employees/:employeeId',
-        Component: EmployeeShow,
+        path: '/subjects/:subjectId',
+        Component: SubjectShow,
       },
       {
-        path: '/employees/new',
-        Component: EmployeeCreate,
+        path: '/subjects/new',
+        Component: SubjectCreate,
       },
       {
-        path: '/employees/:employeeId/edit',
-        Component: EmployeeEdit,
+        path: '/subjects/:subjectId/edit',
+        Component: SubjectEdit,
       },
       // Fallback route for the example routes in dashboard sidebar items
       {
@@ -50,7 +50,7 @@ const themeComponents = {
   ...formInputCustomizations,
 };
 
-export default function CrudDashboard(props: { disableCustomTheme?: boolean }) {
+export default function SubjectDashboard(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props} themeComponents={themeComponents}>
       <CssBaseline enableColorScheme />

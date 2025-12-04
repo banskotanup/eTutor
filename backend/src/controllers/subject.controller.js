@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 //create subject (admin only)
 exports.createSubject = async (req, res) => {
   try {
-    const { name, description, price, teacherId } = req.body;
+    const { title, description, price, teacherId } = req.body;
 
     //check teacher existence
     const teacher = await prisma.user.findUnique({
@@ -25,13 +25,15 @@ exports.createSubject = async (req, res) => {
 
     const subject = await prisma.subject.create({
       data: {
-        title: name,
+        title: title,
         description,
         price: parseInt(price),
         teacherId: parseInt(teacherId),
       },
       include: {
-        teacher: true,
+        teacher: {
+          select: { id: true, firstName: true, lastName: true, email: true, phone: true }
+        },
       },
     });
     return res.json({ message: "Subject created successfully", subject });

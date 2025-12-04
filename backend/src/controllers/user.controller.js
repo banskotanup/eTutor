@@ -49,10 +49,13 @@ exports.getUsers = async (req, res) => {
 //get user by id
 exports.getUserById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
 
     const user = await prisma.user.findUnique({
-      where: { id: Number(id) },
+      where: { id },
       select: {
         id: true,
         firstName: true,
@@ -76,9 +79,8 @@ exports.getUserById = async (req, res) => {
       createdAtFormatted: new Date(user.createdAt).toLocaleString(),
       updatedAtFormatted: new Date(user.updatedAt).toLocaleString(),
     });
-
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res.status(500).json({ message: "Server error" });
   }
 };

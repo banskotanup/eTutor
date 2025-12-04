@@ -8,9 +8,9 @@ const userRouter = Router();
 
 //only admin can manage user
 userRouter.get("/", authMiddleware, authorizeRoles("admin"), getUsers);
+userRouter.get("/teachers", authMiddleware, authorizeRoles("admin"), getTeachers);
 userRouter.get("/:id", authMiddleware, authorizeRoles("admin"), getUserById);
 userRouter.patch("/:id", authMiddleware, authorizeRoles("admin"), updateUser);
-userRouter.get("/teachers", authMiddleware, authorizeRoles("admin"), getTeachers);
 userRouter.patch("/status/:id", authMiddleware, authorizeRoles("admin"), updateUserStatus);
 userRouter.patch("/role/:id", authMiddleware, authorizeRoles("admin"), updateRole);
 userRouter.delete("/delete/:id", authMiddleware, authorizeRoles("admin"), deleteUser);

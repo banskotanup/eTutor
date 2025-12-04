@@ -151,8 +151,7 @@ export default function SubjectList() {
     {
       field: "actions",
       type: "actions",
-      flex: 1,
-      align: "right",
+      width: 120,
       getActions: ({ row }) => [
         <GridActionsCellItem
           key="edit-item"
@@ -247,7 +246,27 @@ export default function SubjectList() {
             disableRowSelectionOnClick
             onRowClick={handleRowClick}
             pageSizeOptions={[5, 10, 25]}
-            sx={{ [`& .${gridClasses.row}:hover`]: { cursor: "pointer" } }}
+            sx={{
+              [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
+                outline: "transparent",
+              },
+              [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]:
+                {
+                  outline: "none",
+                },
+              [`& .${gridClasses.row}:hover`]: {
+                cursor: "pointer",
+              },
+            }}
+            slotProps={{
+              loadingOverlay: {
+                variant: "circular-progress",
+                noRowsVariant: "circular-progress",
+              },
+              baseIconButton: {
+                size: "small",
+              },
+            }}
           />
         )}
       </Box>

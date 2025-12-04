@@ -1,17 +1,17 @@
 "use client";
 
-import Dashboard from "@/components/dashboard/Dashboard";
-import { adminMenu } from "@/components/dashboard/menus";
+import SubjectCreate from "@/components/admin-pages/subject-dashboard/components/SubjectCreate";
 import NotificationsProvider from "@/components/admin-pages/subject-dashboard/hooks/useNotifications/NotificationsProvider";
 import DialogsProvider from "@/components/admin-pages/subject-dashboard/hooks/useDialogs/DialogsProvider";
-import SubjectDashboard from "../../../components/admin-pages/subject-dashboard/SubjectDashboard";
+import Dashboard from "@/components/dashboard/Dashboard";
+import { adminMenu } from "@/components/dashboard/menus";
 
-export default function AdminSubjectsPage() {
+export default function SubjectCreatePage() {
   return (
-    <Dashboard menu={adminMenu} title="Manage Subjects">
+    <Dashboard menu={adminMenu} title="Create Subject">
       <NotificationsProvider>
         <DialogsProvider>
-          <SubjectDashboard />
+          <SubjectCreate />
         </DialogsProvider>
       </NotificationsProvider>
     </Dashboard>
