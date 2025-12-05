@@ -1,4 +1,3 @@
-// components/dashboard/NavbarBreadcrumbs.js
 "use client";
 
 import { styled } from "@mui/material/styles";
@@ -9,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { teacherMenu, studentMenu, adminMenu } from "@/components/dashboard/menus";
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
@@ -21,37 +21,27 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   },
 }));
 
-export default function NavbarBreadcrumbs({ role = "admin" }) {
+export default function NavbarBreadcrumbs() {
   const pathname = usePathname() || "/";
-  // choose menu based on role
+  const user = useCurrentUser();
+
+  if (!user) return null; // loading state
+
+  // select menu based on role
   const menu =
-    role === "admin" ? adminMenu : role === "teacher" ? teacherMenu : studentMenu;
+    user.role === "admin"
+      ? adminMenu
+      : user.role === "teacher"
+      ? teacherMenu
+      : studentMenu;
 
-  // Matching strategies:
-  // 1) exact match
-  let activeItem = menu.find((item) => item.href === pathname);
+  // find the most specific menu item matching current path
+  const matchedItems = menu
+    .filter((item) => pathname === item.href || pathname.startsWith(item.href))
+    .sort((a, b) => b.href.length - a.href.length);
 
-  // 2) startsWith match (good for nested routes, e.g. /admin/subjects/123)
-  if (!activeItem) {
-    activeItem = menu.find((item) => pathname.startsWith(item.href));
-  }
-
-  // 3) longest href match among those that startWith pathname (prefer most specific)
-  if (!activeItem) {
-    const starts = menu.filter((item) => pathname.startsWith(item.href));
-    if (starts.length > 0) {
-      // pick the longest href (most specific)
-      starts.sort((a, b) => b.href.length - a.href.length);
-      activeItem = starts[0];
-    }
-  }
-
-  // 4) fallback to first menu entry (so it never shows "Unknown Page")
-  if (!activeItem && menu.length > 0) {
-    activeItem = menu[0];
-  }
-
-  const activeLabel = activeItem?.label ?? "Page";
+  const activeItem = matchedItems[0] || { label: "Page", href: "/" };
+  const activeLabel = activeItem.label;
   const dashboardHref = menu?.[0]?.href ?? "/";
 
   return (

@@ -143,7 +143,7 @@ export default function SubjectList() {
   const handleCreateClick = () => router.push("/admin/subjects/new");
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 80 },
+    { field: "sno", headerName: "S.No", width: 80 },
     { field: "title", headerName: "Title", width: 200 },
     { field: "description", headerName: "Description", width: 250 },
     { field: "price", headerName: "Price", width: 120, type: "number" },
@@ -257,6 +257,11 @@ export default function SubjectList() {
               [`& .${gridClasses.row}:hover`]: {
                 cursor: "pointer",
               },
+            }}
+            localeText={{
+              noRowsLabel: isLoading
+                ? "Loading subjects..."
+                : "No subjects found.", // 🔹 custom empty message inside grid
             }}
             slotProps={{
               loadingOverlay: {

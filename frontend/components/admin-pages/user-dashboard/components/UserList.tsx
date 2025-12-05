@@ -30,6 +30,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { useDialogs } from "@/components/admin-pages/subject-dashboard/hooks/useDialogs/useDialogs";
 import useNotifications from "@/components/admin-pages/subject-dashboard/hooks/useNotifications/useNotifications";
+import { GridFilterInputValue } from "@mui/x-data-grid";
 
 // API URL
 const API_URL =
@@ -38,6 +39,76 @@ const API_URL =
     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 const INITIAL_PAGE_SIZE = 10;
+
+const filterOperators = [
+  {
+    label: "contains",
+    value: "contains",
+    getApplyFilterFn: (filterItem) => {
+      if (!filterItem.value) return null;
+      return (params) =>
+        params.value
+          ?.toString()
+          .toLowerCase()
+          .includes(filterItem.value.toString().toLowerCase());
+    },
+    InputComponent: GridFilterInputValue, // ✅ This shows the input box
+  },
+];
+
+export const enumFilterOperators = [
+  {
+    label: "equals",
+    value: "equals",
+    getApplyFilterFn: (filterItem) => {
+      if (!filterItem.value) return null;
+      return (params) => params.value === filterItem.value;
+    },
+    InputComponent: (props: any) => {
+      const { item, applyValue } = props;
+
+      const options = ["student", "teacher", "admin"];
+
+      return (
+        <Select
+          value={item.value || ""}
+          size="small"
+          onChange={(e) => applyValue({ ...item, value: e.target.value })}
+          sx={{
+            width: "100%",
+            minWidth: 120,
+            "& .MuiSelect-select": {
+              display: "flex",
+              justifyContent: "center",
+              padding: "4px 8px",
+            },
+          }}
+          displayEmpty
+          renderValue={(v) =>
+            v ? (
+              <Chip
+                label={v.charAt(0).toUpperCase() + v.slice(1)}
+                size="small"
+                sx={{ width: "100%", justifyContent: "center" }}
+              />
+            ) : (
+              "--Select--"
+            )
+          }
+        >
+          <MenuItem value="">
+            <em>--Select--</em>
+          </MenuItem>
+          {options.map((opt) => (
+            <MenuItem key={opt} value={opt}>
+              {opt.charAt(0).toUpperCase() + opt.slice(1)}
+            </MenuItem>
+          ))}
+        </Select>
+      );
+    },
+  },
+];
 
 export interface User {
   id: number;
@@ -97,7 +168,9 @@ export default function UserList() {
 
     try {
       const res = await fetch(
-        `${API_URL}/api/v1/users?page=${page}&pageSize=${pageSize}`,
+        `${API_URL}/api/v1/users?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}` +
+          `&filter=${encodeURIComponent(JSON.stringify(filterModel))}` +
+          `&sort=${encodeURIComponent(JSON.stringify(sortModel))}`,
         { method: "GET", credentials: "include", cache: "no-store" }
       );
 
@@ -131,7 +204,7 @@ export default function UserList() {
     } finally {
       setLoading(false);
     }
-  }, [paginationModel, notifications]);
+  }, [paginationModel, notifications, filterModel, sortModel]);
 
   React.useEffect(() => {
     fetchUsers();
@@ -160,7 +233,7 @@ export default function UserList() {
   // Sort
   const handleSortModelChange = (model: GridSortModel) => {
     setSortModel(model);
-    if (model.length) {
+    if (model.length > 0) {
       router.replace(
         `/admin/users?sort=${encodeURIComponent(JSON.stringify(model))}`
       );
@@ -178,15 +251,21 @@ export default function UserList() {
 
   // Columns
   const columns: GridColDef<User>[] = [
-    { field: "id", headerName: "ID", width: 80 },
-    { field: "userName", headerName: "Name", width: 200 },
-    { field: "email", headerName: "Email", width: 220 },
-    { field: "phone", headerName: "Phone", width: 150 },
-    { field: "role", headerName: "Role", width: 130 },
+    { field: "sno", headerName: "S.No", width: 80, filterable: false },
+    { field: "userName", headerName: "Name", width: 200, filterOperators },
+    { field: "email", headerName: "Email", width: 220, filterOperators },
+    { field: "phone", headerName: "Phone", width: 150, filterOperators },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 130,
+      filterOperators: enumFilterOperators,
+    },
     {
       field: "status",
       headerName: "Status",
       width: 150,
+      filterOperators,
       renderCell: (params) => {
         const status = params.row.status || "pending";
         const color =
@@ -253,7 +332,12 @@ export default function UserList() {
         );
       },
     },
-    { field: "createdAt", headerName: "Created", width: 160 },
+    {
+      field: "createdAt",
+      headerName: "Created",
+      width: 160,
+      filterable: false,
+    },
     {
       field: "actions",
       type: "actions",
@@ -378,6 +462,12 @@ export default function UserList() {
               [`& .${gridClasses.row}:hover`]: {
                 cursor: "pointer",
               },
+              "& .MuiDataGrid-toolbarQuickFilter": { display: "none" },
+            }}
+            localeText={{
+              noRowsLabel: isLoading
+                ? "Loading subjects..."
+                : "No users found.", // 🔹 custom empty message inside grid
             }}
             slotProps={{
               loadingOverlay: {

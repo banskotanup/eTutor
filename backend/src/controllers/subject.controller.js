@@ -32,7 +32,13 @@ exports.createSubject = async (req, res) => {
       },
       include: {
         teacher: {
-          select: { id: true, firstName: true, lastName: true, email: true, phone: true }
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
         },
       },
     });
@@ -47,13 +53,13 @@ exports.createSubject = async (req, res) => {
 exports.updateSubject = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-      const { name, description, price, teacherId } = req.body;
-      
-      const data = {};
+    const { name, description, price, teacherId } = req.body;
 
-      if (name) data.title = name;
-      if (description) data.description = description;
-      if (price) data.price = parseInt(price);
+    const data = {};
+
+    if (name) data.title = name;
+    if (description) data.description = description;
+    if (price) data.price = parseInt(price);
 
     if (teacherId) {
       const teacher = await prisma.user.findUnique({
@@ -70,8 +76,8 @@ exports.updateSubject = async (req, res) => {
         return res
           .status(400)
           .json({ message: "Selected user is not a teacher" });
-        }
-        data.teacherId = parseInt(teacherId);
+      }
+      data.teacherId = parseInt(teacherId);
     }
 
     const updated = await prisma.subject.update({
@@ -111,8 +117,9 @@ exports.getAllSubjects = async (req, res) => {
       prisma.subject.count(),
     ]);
 
-    const formatted = subjects.map((s) => ({
+    const formatted = subjects.map((s, index) => ({
       ...s,
+      sno: page * pageSize + index + 1,
       teacherName: s.teacher
         ? `${s.teacher.firstName} ${s.teacher.lastName}`
         : "",
@@ -162,15 +169,90 @@ exports.getSubjectById = async (req, res) => {
 //get subject for teacher
 exports.getTeacherSubjects = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 0;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+
+    // ===== Sorting =====
+    let orderBy = [];
+
+    if (req.query.sort) {
+      try {
+        const sortModel = JSON.parse(req.query.sort);
+
+        orderBy = sortModel
+          .filter(({ field }) =>
+            [
+              "id",
+              "title",
+              "description",
+              "price",
+              "totalLessons",
+              "sno",
+            ].includes(field)
+          )
+          .map(({ field, sort }) => {
+            if (field === "sno") {
+              return { id: sort.toLowerCase() };
+            }
+            return { [field]: sort.toLowerCase() };
+          });
+      } catch (err) {
+        console.error("Invalid sort JSON", err);
+      }
+    }
+
+    if (orderBy.length === 0) orderBy = [{ id: "asc" }];
+
+    // ===== Filtering =====
+    const where = { teacherId: req.user.id };
+    if (req.query.filter) {
+      try {
+        const filterModel = JSON.parse(req.query.filter); // MUI filter object
+        const AND = [];
+
+        filterModel.items?.forEach((filter) => {
+          const { field, operator, value } = filter;
+          if (!value) return;
+
+          if (!["title"].includes(field)) return;
+
+          switch (operator) {
+            case "contains":
+              AND.push({ [field]: { contains: value, mode: "insensitive" } });
+              break;
+          }
+        });
+
+        if (AND.length > 0) where.AND = AND;
+      } catch (err) {
+        console.error("Invalid filter JSON", err);
+      }
+    }
+
+    // ===== Count total for pagination =====
+    const total = await prisma.subject.count({ where });
+
+    // ===== Fetch paginated subjects =====
     const subjects = await prisma.subject.findMany({
-      where: {
-        teacherId: req.user.id,
+      where,
+      skip: page * pageSize,
+      take: pageSize,
+      orderBy,
+      include: {
+        lessons: true,
       },
     });
-    return res.json(subjects);
+
+    const formatted = subjects.map((s, index) => ({
+      ...s,
+      sno: page * pageSize + index + 1,
+      totalLessons: s.lessons ? s.lessons.length : 0,
+    }));
+
+    res.json({ rows: formatted, total });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: "Server error" });
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
